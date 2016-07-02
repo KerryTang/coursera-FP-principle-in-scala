@@ -110,5 +110,59 @@ class FunSetSuite extends FunSuite {
     }
   }
 
+  test("intersect contains elements that are in both") {
+    new TestSets {
+      val s = union(s1, s2)
+      assert(!contains(intersect(s1, s2), 1), "Intersect with noting")
+      assert(contains(intersect(s, s2), 2), "Interset of {1, 2} and {2} should be {2}")
+    }
+  }
+
+  test("diff contains elements that are in s but not in t") {
+    new TestSets {
+      val s = union(s1, s2)
+      assert(contains(diff(s1, s2), 1), "diff of {1} and {2} is {1}")
+      assert(contains(diff(s, s1), 2), "diff of {1, 2} and {1} is {2}")
+      assert(contains(diff(s, s3), 1), "diff of {1, 2} and {3} is {1, 2} missing {1}")
+      assert(contains(diff(s, s3), 2), "diff of {1, 2} and {3} is {1, 2} missing {2}")
+       
+    }
+  }
+
+  test("filter with prediction p") {
+    new TestSets {
+      val s = union(s1, s2)
+      assert(!contains(filter(s1, (x:Int) => x > 1), 1), "{1} filter with >1 should be empty")
+      assert(contains(filter(s, (x:Int) => x > 1), 2), "{1, 2} filter with >1 should be {2}")   
+    }
+  }
+
+
+  test("forall with prediction p") {
+    new TestSets {
+      val s = union(s1, s2)
+      assert(forall(s, {_ > 0}), "{1 , 2}.forall(>0) should be true ")
+      assert(!forall(s, {_ > 1}), "{1 , 2}.forall(>1) should be false ")
+    }
+  }  
+
+  test("exist with prediction p") {
+    new TestSets {
+      val s = union(s1, s2)
+      assert(exists(s, {_ > 0}), "{1 , 2}.exist(>0) should be true ")
+      assert(exists(s, {_ > 1}), "{1 , 2}.exist(>1) should be also true ")
+    }
+  }  
+
+  test("map with prediction p") {
+    new TestSets {
+      val s = union(s1, s2)
+      assert(contains(map(s, { (x:Int) => x*x}), 1), "{1 , 2}.map(x*x) should produce {1, 4} ")
+      assert(contains(map(s, { (x:Int) => x*x}), 4), "{1 , 2}.map(x*x) should produce {1, 4} ")
+      assert(!contains(map(s, { (x:Int) => x*x}), 2), "{1 , 2}.map(x*x) should produce {1, 4} no {2}")
+
+    }
+  }  
+
 
 }
