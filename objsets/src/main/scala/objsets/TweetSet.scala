@@ -139,9 +139,10 @@ class NonEmpty(elem: Tweet, left: TweetSet, right: TweetSet) extends TweetSet {
       right.filterAcc(p, left.filterAcc(p, if (p(elem)) acc.incl(elem) else acc))
     
     def union(that: TweetSet): TweetSet = 
-
-      ((left union right) union other) incl elem 
-      
+ 
+      //((left union right) union other) incl elem 
+      // Above implementation lead to O(2^n) complexity and cause stackoverflow 
+      right.union(left.union(that.incl(elem)))
 
 
     def mostRetweeted: Tweet = {
